@@ -37,15 +37,16 @@ function binomial{T<:Integer}(n::T, k::T)
     if k > (n>>1)
         k = (n - k)
     end
-    x = nn = n - k + 1.0
-    nn += 1.0
-    rr = 2.0
+    x::T = nn = n - k + 1
+    nn += 1
+    rr = 2
     while rr <= k
-        x *= nn/rr
+        x = div(widemul(x, nn), rr)
+        x < 0 && throw(OverflowError())
         rr += 1
         nn += 1
     end
-    sgn*iround(T,x)
+    convert(T, copysign(x, sgn))
 end
 
 ## other ordering related functions ##
